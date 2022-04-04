@@ -7,7 +7,8 @@ import {
     Markets,
     convertToNumber,
     calculateMarkPrice,
-    PositionDirection
+    PositionDirection,
+    BASE_PRECISION
 } from "@drift-labs/sdk"
 import { sleep, wrapInTx, clearingHouseProgramId, QUOTE_PRECISION, updateNumber } from "./util"
 import { ftx, binanceusdm } from "ccxt"
@@ -359,5 +360,56 @@ export class ArbClient {
 
             await sleep(100)
         }
+    }
+
+
+    async check() {
+        while (true) {
+            let positionInfo = this.clearingHouseUser.getUserPosition(this.marketIndex)
+            let positionAmount = convertToNumber(positionInfo.baseAssetAmount, BASE_PRECISION)
+            
+            let estimatedPositionAmount = -this.count * this.amount
+            
+            let diff = estimatedPositionAmount - positionAmount
+            
+            while (true) {
+                try {
+                    if (diff * this.driftPrice > 0.1) {
+                        let signature = await this.connection.sendTransaction(
+                        wrapInTx(
+                            await this.clearingHouse.getOpenPositionIx(
+                                PositionDirection.LONG,
+                                new BN(this.driftPrice * diff * QUOTE_PRECISION),
+                                this.marketIndex
+                            )
+                        ),
+                        [this.keypair]
+                        )
+                        console.log(`checked position: ${signature}`)
+                    } else if (diff * this.driftPrice < -0.1) {
+                        let signature = await this.connection.sendTransaction(
+                        wrapInTx(
+                            await this.clearingHouse.getOpenPositionIx(
+                                PositionDirection.SHORT,
+                                new BN(this.driftPrice * -diff * QUOTE_PRECISION),
+                                this.marketIndex
+                            )
+                        ),
+                        [this.keypair]
+                        )
+                        console.log(`checked position: ${signature}`)
+                    } else { console.log('skipped this time') }
+                    break
+                } catch (e) { console.log(e.message) }
+            }
+            
+            await sleep(600000)
+        }
+    }
+
+
+    async main() {
+        this.loop()
+        this.check()
     }
 }
