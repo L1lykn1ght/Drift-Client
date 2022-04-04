@@ -32,7 +32,7 @@ const main = async () => {
         count
     )
 
-    arbClient.loop()
+    arbClient.main()
 }
 
 
