@@ -24,6 +24,7 @@ export class ArbClient {
     amount: number
     limit: number
     count: number
+    exitCount = 0
 
     baseAsset: string
     symbol: string
@@ -182,34 +183,60 @@ export class ArbClient {
 
 
     async editCexLimitBuyOrder() {
-        try {
-            this.cexPriceBuy = this.tmpCexPriceBuy
-            let info = await this.cexClient.editOrder(
-                this.orderIDBuy,
-                this.symbol,
-                'limit',
-                'buy',
-                this.remainingBuy,
-                this.cexPriceBuy
-            )
-            this.orderIDBuy = info.id
-        } catch (e) { console.log(e.message) }
+        while (true) {
+            try {
+                this.cexPriceBuy = this.tmpCexPriceBuy
+                let info = await this.cexClient.editOrder(
+                    this.orderIDBuy,
+                    this.symbol,
+                    'limit',
+                    'buy',
+                    this.remainingBuy,
+                    this.cexPriceBuy
+                )
+                this.orderIDBuy = info.id
+                this.exitCount = 0
+                break
+            } catch (e) {
+                console.log(e.message)
+                this.exitCount += 1
+
+                if (this.exitCount === 3) {
+                    this.exitCount = 0
+                    this.statusBuy = 'closed'
+                    break
+                }
+            }
+        }
     }
 
 
     async editCexLimitSellOrder() {
-        try {
-            this.cexPriceSell = this.tmpCexPriceSell
-            let info = await this.cexClient.editOrder(
-                this.orderIDSell,
-                this.symbol,
-                'limit',
-                'sell',
-                this.remainingSell,
-                this.cexPriceSell
-            )
-            this.orderIDSell = info.id
-        } catch (e) { console.log(e.message) }
+        while (true) {
+            try {
+                this.cexPriceSell = this.tmpCexPriceSell
+                let info = await this.cexClient.editOrder(
+                    this.orderIDSell,
+                    this.symbol,
+                    'limit',
+                    'sell',
+                    this.remainingSell,
+                    this.cexPriceSell
+                )
+                this.orderIDSell = info.id
+                this.exitCount = 0
+                break
+            } catch (e) {
+                console.log(e.message)
+                this.exitCount += 1
+
+                if (this.exitCount === 3) {
+                    this.exitCount = 0
+                    this.statusSell = 'closed'
+                    break
+                }
+            }
+        }
     }
 
 
