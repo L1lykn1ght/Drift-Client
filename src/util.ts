@@ -31,6 +31,20 @@ export const updateNumber = {
         FTT: 0.002
     },
     binance: {
-        LUNA: 0.005
+        SOL: 0.01,
+        BTC: 1,
+        ETH: 0.1,
+        LUNA: 0.005,
+        AVAX: 0.01,
+        BNB: 0.01,
+        MATIC: 0.0001,
+        ATOM: 0.001,
+        DOT: 0.001,
+        ADA: 0.0001,
+        ALGO: 0.0001,
+        LTC: 0.01,
+        XRP: 0.0001,
+        APE: 0.001,
+        DOGE: 0.00001
     }
 }
