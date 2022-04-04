@@ -3,6 +3,7 @@ import {
     BN,
     Wallet,
     ClearingHouse,
+    ClearingHouseUser,
     Markets,
     convertToNumber,
     calculateMarkPrice,
@@ -17,6 +18,7 @@ export class ArbClient {
     keypair: Keypair
 
     clearingHouse: ClearingHouse
+    clearingHouseUser: ClearingHouseUser
     cexClient: ftx | binanceusdm
     
     amount: number
@@ -59,6 +61,12 @@ export class ArbClient {
             clearingHouseProgramId
         )
         await this.clearingHouse.subscribe()
+
+        this.clearingHouseUser = ClearingHouseUser.from(
+            this.clearingHouse,
+            wallet.publicKey
+        )
+        await this.clearingHouseUser.subscribe()
 
         this.keypair = wallet.payer
 
