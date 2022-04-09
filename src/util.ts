@@ -45,6 +45,7 @@ export const updateNumber = {
         LTC: 0.01,
         XRP: 0.0001,
         APE: 0.001,
-        DOGE: 0.00001
+        DOGE: 0.00001,
+        NEAR: 0.001
     }
 }

@@ -128,8 +128,19 @@ export class ArbClient {
                 )
                 this.orderIDBuy = info.id
                 this.statusBuy = info.status
+                this.exitCount = 0
                 break
-            } catch (e) { console.log(e.message) }
+            } catch (e) {
+                console.log(e.message)
+
+                this.exitCount += 1
+
+                if (this.exitCount === 3) {
+                    this.exitCount = 0
+                    this.statusBuy = 'closed'
+                    break
+                }
+            }
         }
     }
 
@@ -147,8 +158,19 @@ export class ArbClient {
                 )
                 this.orderIDSell = info.id
                 this.statusSell = info.status
+                this.exitCount = 0
                 break
-            } catch (e) { console.log(e.message) }
+            } catch (e) {
+                console.log(e.message)
+
+                this.exitCount += 1
+
+                if (this.exitCount === 3) {
+                    this.exitCount = 0
+                    this.statusSell = 'closed'
+                    break
+                }
+            }
         }
     }
 
