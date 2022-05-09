@@ -42,10 +42,15 @@ export const updateNumber = {
         DOT: 0.001,
         ADA: 0.0001,
         ALGO: 0.0001,
+        FTT: 0.001,
         LTC: 0.01,
         XRP: 0.0001,
         APE: 0.001,
         DOGE: 0.00001,
-        NEAR: 0.001
+        NEAR: 0.001,
+        SRM: 0.001,
+        GMT: 0.0001,
+        CRV: 0.001,
+        FTM: 0.0001
     }
 }
